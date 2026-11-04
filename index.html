@@ -69,15 +69,33 @@ h1{font-family:var(--f-display);font-weight:400;color:var(--petal);font-size:cla
 .player .eq{position:absolute;left:0;right:0;bottom:0;width:100%;height:130px;z-index:1;pointer-events:none}
 .player .bar{display:flex;align-items:center;gap:12px;padding:12px 16px 14px;font-variant-numeric:tabular-nums;font-size:12px;color:var(--mute)}
 .player input[type=range]{flex:1;min-width:0;accent-color:var(--rose);height:4px;cursor:pointer}
-.kara{margin:22px 0 6px;font-size:18px;line-height:1.75;text-align:left;hyphens:none}
-.kara .ln{display:block;margin:0 0 6px;color:var(--mute);transition:color .3s}
-.kara .ln.on{color:var(--ink)}
-.kara .ln.done{color:var(--ink);opacity:.55}
-.kara .w{transition:color .12s,text-shadow .12s}
-.kara .w.lit{color:var(--petal);text-shadow:0 0 14px rgba(227,161,173,.55)}
-.kara .ln.on .w.past{color:var(--ink)}
+.player.compact{background:var(--dusk);border:1px solid var(--line);border-radius:14px;padding:14px 16px 10px}
+.player.compact .row{display:flex;align-items:center;gap:14px}
+.player.compact .play{position:static;transform:none;width:56px;height:56px;flex:0 0 56px;background:var(--rose);color:var(--night);border:0;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;opacity:1;pointer-events:auto}
+.player.compact .play::before{display:none}
+.player.compact .play:active{transform:scale(.92)}
+.player.compact .play.pop{animation:popc .35s ease}
+@keyframes popc{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+.player.compact.playing .play{opacity:1;pointer-events:auto;transform:none}
+.player.compact .play svg{width:26px;height:26px;margin-left:2px}
+.player.compact .eqwrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.player.compact .eq{position:static;width:100%;height:44px}
+.player.compact .meta{position:static;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.player.compact .meta b{font-size:16px;text-shadow:none}
+.player.compact .meta span{display:inline;margin:0;font-size:11px;opacity:.7}
+.player.compact .bar{padding:6px 0 0}
+.kara{margin:22px 0 6px;font-size:18px;line-height:1.75;text-align:left;hyphens:none;min-height:1.75em}
+.kara .ln{display:none}
+.kara .ln.show{display:block;animation:lnIn .45s ease both}
+@keyframes lnIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kara .ln.show .w{opacity:0;transition:opacity .25s}
+.kara .ln.show .w.past,.kara .ln.show .w.lit{opacity:1}
+.kara .ln.show .w.lit{color:var(--petal)}
+.kara .ln.done .w{opacity:1;color:var(--ink)}
+.kara .hintp{color:var(--mute);font-size:15px}
+.kara.started .hintp{display:none}
+.kara .ln{margin:0 0 6px;color:var(--ink)}
 .kara .ln.warm{color:var(--rose);font-family:var(--f-hand);font-size:26px;margin-top:10px}
-.kara .ln.warm .w.lit{color:var(--petal)}
 .photo2{margin:26px 0 4px;border-radius:4px;overflow:hidden}
 .photo2 img{display:block;width:100%;height:auto}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -180,7 +198,7 @@ const DAYS = {
   den4:{ open:"2026-11-07T06:00:00Z", when:"суббота, 7 ноября · с утра",
     riddle:"Самец чёрный с жёлтым клювом, зато поёт так, что Битлз написали про него песню. В Софии его слышно в любом дворе на рассвете. Кто это?", bird:"b4", answers:["черный дрозд","чёрный дрозд","дрозд","кос","blackbird","common blackbird","turdus merula"],
     nick:"Секретному Агенту 015см", sign:"Твой Секретный Агент 015см", img:"esc", o:"50% 40%",
-    track:{src:"t4", title:"Перехват", artist:"Агент 0015см", ar:"968/1100"},
+    track:{src:"t4", title:"Перехват", artist:"Агент 0015см", compact:true},
     title:"Операция «Возвращение»", bg:"Включи звук. Доклад Агента прилагается",
     text:[],
     karaoke:[{"t": "Центр, центр, это Агент ноль-ноль-пятнадцать сантиметров.", "s": 0.17, "e": 3.45}, {"t": "Докладываю.", "s": 4.13, "e": 4.81}, {"t": "Объект провёл в Софии четыре дня и покидает территорию Болгарии.", "s": 6.13, "e": 10.21}, {"t": "Повторяю.", "s": 11.47, "e": 12.15}, {"t": "Объект провёл в Софии четыре дня", "s": 12.91, "e": 13.33}, {"t": "и покидает территорию Болгарии.", "s": 13.85, "e": 17.83}, {"t": "Загадки разгаданы, песня прослушана,", "s": 19.43, "e": 22.27}, {"t": "брови по-прежнему лучшие в Европе.", "s": 23.21, "e": 25.77}, {"t": "Объект готов к возвращению.", "s": 27.05, "e": 28.69}, {"t": "При себе имеет: чемодан, лёгкую усталость", "s": 30.35, "e": 31.79}, {"t": "и, по данным разведки,", "s": 32.35, "e": 33.31}, {"t": "тоску по какой-то СексМашине.", "s": 34.41, "e": 37.89}, {"t": "Что это за СексМашина?!", "s": 40.13, "e": 41.17}, {"t": "Радость объекта зафиксирована невооружённым взглядом: руки раскинуты, улыбка на максимуме.", "s": 43.33, "e": 48.57}, {"t": "Продолжаю слежку.", "s": 50.21, "e": 51.23}, {"t": "Агент ноль-ноль-пятнадцать сантиметров выдвигается на позицию.", "s": 51.77, "e": 54.85}, {"t": "Марин, лети спокойно.", "s": 56.09, "e": 56.91, "warm": true}, {"t": "Конец связи.", "s": 59.51, "e": 59.82}],
@@ -261,7 +279,14 @@ function renderReward(k){
   const D=DAYS[k], n=ORDER.indexOf(k)+1;
   const style=`--o:${D.o};--dx:${D.dx||"-1.5%"};--dy:${D.dy||"-1%"}`;
   const media=[];
-  if(D.track) media.push(`<div class="player" id="pl">
+  if(D.track && D.track.compact) media.push(`<div class="player compact" id="pl">
+      <div class="row">
+        <button class="play" id="playBtn" type="button" aria-label="Играть"><svg viewBox="0 0 24 24" id="playIco"><path d="M8 5v14l11-7z"/></svg></button>
+        <div class="eqwrap"><div class="meta"><b>${D.track.title}</b><span>${D.track.artist}</span></div><canvas class="eq" id="eq"></canvas></div>
+      </div>
+      <div class="bar"><span id="tCur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Перемотка"><span id="tDur">–:––</span></div>
+      <audio id="au" preload="metadata" ${IMG[D.track.src]?`src="${IMG[D.track.src]}"`:""}></audio></div>`);
+  else if(D.track) media.push(`<div class="player" id="pl">
       <div class="cover" style="--o:${D.o};--ar:${D.track.ar||1}"><img src="${IMG[D.img]}" alt="">
         <div class="meta"><b>${D.track.title}</b><span>${D.track.artist}</span></div>
         <canvas class="eq" id="eq"></canvas>
@@ -280,7 +305,7 @@ function renderReward(k){
     : `<div class="photo" style="${style}"><img src="${IMG[D.img]}" alt="${D.stamp}"><span class="stamp">${D.stamp}</span></div>`;
   app.innerHTML = topBar(`Приз ${n} из 4 · ${D.when}`) + photos +
     `<h1>${D.title}</h1><p class="bg">${D.bg}</p>
-     ${D.karaoke?`<div class="kara" id="kara">${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
+     ${D.karaoke?`<div class="kara" id="kara"><p class="hintp">Нажми play. Текст доклада появится по ходу.</p>${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
      <div class="note">${D.text.map(t=>`<p>${t}</p>`).join("")}${D.sticker?`<img class="st" src="${IMG[D.sticker]}" alt="">`:""}${D.gif?`<video class="st gif" src="${IMG[D.gif]}" autoplay muted loop playsinline></video>`:""}</div>
      ${media.length?`<div class="media">${media.join("")}</div>`:""}
      ${D.photo2?`<div class="photo2"><img src="${IMG[D.photo2]}" alt=""></div>`:""}
@@ -299,11 +324,12 @@ function mountPlayer(){
   au.addEventListener("timeupdate",()=>{ if(!seeking){ seek.value=Math.round(au.currentTime/au.duration*1000)||0; cur.textContent=fmt(au.currentTime);} syncKara(au.currentTime); });
   function syncKara(tc){
     const k=document.getElementById("kara"); if(!k) return;
+    if(tc>0.05) k.classList.add("started");
     k.querySelectorAll(".ln").forEach(ln=>{
       const s=+ln.dataset.s, e=+ln.dataset.e, ws=ln.querySelectorAll(".w");
-      if(tc<s){ ln.classList.remove("on","done"); ws.forEach(w=>w.classList.remove("lit","past")); return; }
-      if(tc>=e){ ln.classList.remove("on"); ln.classList.add("done"); ws.forEach(w=>{w.classList.remove("lit"); w.classList.add("past");}); return; }
-      ln.classList.add("on"); ln.classList.remove("done");
+      if(tc<s){ ln.classList.remove("show","done"); ws.forEach(w=>w.classList.remove("lit","past")); return; }
+      if(tc>=e){ ln.classList.add("show","done"); ws.forEach(w=>{w.classList.remove("lit"); w.classList.add("past");}); return; }
+      ln.classList.add("show"); ln.classList.remove("done");
       const idx=Math.min(ws.length-1, Math.floor((tc-s)/(e-s)*ws.length));
       ws.forEach((w,i)=>{ w.classList.toggle("lit", i===idx); w.classList.toggle("past", i<idx); });
     });
@@ -315,7 +341,7 @@ function mountPlayer(){
   let actx, an, data;
   const pl=document.getElementById("pl");
   const cover=pl.querySelector(".cover");
-  cover.addEventListener("click",e=>{ if(e.target.closest(".play")) return; if(playing) toggle(); });
+  if(cover) cover.addEventListener("click",e=>{ if(e.target.closest(".play")) return; if(playing) toggle(); });
   btn.onclick=()=>toggle();
   async function toggle(){
     btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
