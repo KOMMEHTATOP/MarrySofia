@@ -96,7 +96,10 @@ h1{font-family:var(--f-display);font-weight:400;color:var(--petal);font-size:cla
 .kara.started .hintp{display:none}
 .kara .ln{margin:0 0 6px;color:var(--ink)}
 .kara .ln.warm{color:var(--rose);font-family:var(--f-hand);font-size:26px;margin-top:10px}
-.photo2{margin:26px 0 4px;border-radius:4px;overflow:hidden}
+.photo2{margin:26px 0 4px;border-radius:4px;overflow:hidden;transition:opacity .9s ease,transform .9s ease}
+.photo2.wait{display:none}
+.photo2.in{display:block;animation:phIn 1s ease both}
+@keyframes phIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 .photo2 img{display:block;width:100%;height:auto}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pair .photo{aspect-ratio:3/4}
@@ -201,8 +204,8 @@ const DAYS = {
     track:{src:"t4", title:"Перехват", artist:"Агент 0015см", compact:true},
     title:"Операция «Возвращение»", bg:"Включи звук. Доклад Агента прилагается",
     text:[],
-    karaoke:[{"t": "Центр, центр, это Агент ноль-ноль-пятнадцать сантиметров.", "s": 0.17, "e": 3.45}, {"t": "Докладываю.", "s": 4.13, "e": 4.81}, {"t": "Объект провёл в Софии четыре дня и покидает территорию Болгарии.", "s": 6.13, "e": 10.21}, {"t": "Повторяю.", "s": 11.47, "e": 12.15}, {"t": "Объект провёл в Софии четыре дня", "s": 12.91, "e": 13.33}, {"t": "и покидает территорию Болгарии.", "s": 13.85, "e": 17.83}, {"t": "Загадки разгаданы, песня прослушана,", "s": 19.43, "e": 22.27}, {"t": "брови по-прежнему лучшие в Европе.", "s": 23.21, "e": 25.77}, {"t": "Объект готов к возвращению.", "s": 27.05, "e": 28.69}, {"t": "При себе имеет: чемодан, лёгкую усталость", "s": 30.35, "e": 31.79}, {"t": "и, по данным разведки,", "s": 32.35, "e": 33.31}, {"t": "тоску по какой-то СексМашине.", "s": 34.41, "e": 37.89}, {"t": "Что это за СексМашина?!", "s": 40.13, "e": 41.17}, {"t": "Радость объекта зафиксирована невооружённым взглядом: руки раскинуты, улыбка на максимуме.", "s": 43.33, "e": 48.57}, {"t": "Продолжаю слежку.", "s": 50.21, "e": 51.23}, {"t": "Агент ноль-ноль-пятнадцать сантиметров выдвигается на позицию.", "s": 51.77, "e": 54.85}, {"t": "Марин, лети спокойно.", "s": 56.09, "e": 56.91, "warm": true}, {"t": "Конец связи.", "s": 59.51, "e": 59.82}],
-    photo2:"arms" }
+    karaoke:[{"t": "Центр, центр, это Агент ноль-ноль-пятнадцать сантиметров.", "s": 0.17, "e": 3.45}, {"t": "Докладываю.", "s": 4.13, "e": 4.81}, {"t": "Объект провёл в Софии четыре дня и покидает территорию Болгарии.", "s": 6.13, "e": 10.21}, {"t": "Повторяю.", "s": 11.47, "e": 12.15}, {"t": "Объект провёл в Софии четыре дня", "s": 12.91, "e": 13.33}, {"t": "и покидает территорию Болгарии.", "s": 13.85, "e": 17.83}, {"t": "Загадки разгаданы, песня прослушана,", "s": 19.43, "e": 22.27}, {"t": "брови по-прежнему лучшие в Европе.", "s": 23.21, "e": 25.77}, {"t": "Объект готов к возвращению.", "s": 27.05, "e": 28.69}, {"t": "При себе имеет: чемодан, лёгкую усталость", "s": 30.35, "e": 31.79}, {"t": "и, по данным разведки,", "s": 32.35, "e": 33.31}, {"t": "тоску по какой-то СексМашине.", "s": 34.41, "e": 37.89}, {"t": "Что это за СексМашина?!", "s": 40.13, "e": 41.17}, {"t": "Радость объекта зафиксирована невооружённым взглядом: руки раскинуты, улыбка на максимуме.", "s": 43.33, "e": 48.57}, {"t": "Продолжаю слежку.", "s": 50.21, "e": 51.23}, {"t": "Агент ноль-ноль-пятнадцать сантиметров выдвигается на позицию.", "s": 51.77, "e": 54.85}, {"t": "Конец связи.", "s": 59.51, "e": 59.82}],
+    photo2:"esc", photoAt:"43.3" }
 };
 const ORDER = ["den1","den2","den3","den4"];
 const app = document.getElementById("app");
@@ -305,10 +308,10 @@ function renderReward(k){
     : `<div class="photo" style="${style}"><img src="${IMG[D.img]}" alt="${D.stamp}"><span class="stamp">${D.stamp}</span></div>`;
   app.innerHTML = topBar(`Приз ${n} из 4 · ${D.when}`) + photos +
     `<h1>${D.title}</h1><p class="bg">${D.bg}</p>
-     ${D.karaoke?`<div class="kara" id="kara"><p class="hintp">Нажми play. Текст доклада появится по ходу.</p>${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
+     ${D.karaoke?`<div class="kara" id="kara">${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
      <div class="note">${D.text.map(t=>`<p>${t}</p>`).join("")}${D.sticker?`<img class="st" src="${IMG[D.sticker]}" alt="">`:""}${D.gif?`<video class="st gif" src="${IMG[D.gif]}" autoplay muted loop playsinline></video>`:""}</div>
      ${media.length?`<div class="media">${media.join("")}</div>`:""}
-     ${D.photo2?`<div class="photo2"><img src="${IMG[D.photo2]}" alt=""></div>`:""}
+     ${D.photo2?`<div class="photo2${D.photoAt?" wait":""}" id="photo2" data-at="${D.photoAt||0}"><img src="${IMG[D.photo2]}" alt=""></div>`:""}
      <p class="sign">${D.sign}</p>${D.ps?`<p class="ps">${D.ps}</p>`:""}
      <p class="again"><a href="#">все загадки</a></p>`;
   mountLotties(); mountPlayer();
@@ -325,6 +328,7 @@ function mountPlayer(){
   function syncKara(tc){
     const k=document.getElementById("kara"); if(!k) return;
     if(tc>0.05) k.classList.add("started");
+    const ph=document.getElementById("photo2"); if(ph && ph.dataset.at){ if(tc>=+ph.dataset.at){ if(!ph.classList.contains("in")){ ph.classList.remove("wait"); ph.classList.add("in"); } } else { ph.classList.add("wait"); ph.classList.remove("in"); } }
     k.querySelectorAll(".ln").forEach(ln=>{
       const s=+ln.dataset.s, e=+ln.dataset.e, ws=ln.querySelectorAll(".w");
       if(tc<s){ ln.classList.remove("show","done"); ws.forEach(w=>w.classList.remove("lit","past")); return; }
