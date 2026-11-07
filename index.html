@@ -396,7 +396,10 @@ function renderIndex(){
      <ul class="days">${ORDER.map((k,i)=>{const D=DAYS[k], u=unlocked(k), s=solved(k);
        return `<li><a href="#${k}"><span class="n">${i+1}</span><span><span class="t">${s?D.title:(u?"Загадка "+(i+1):"Закрыто")}</span><br><span class="d">${D.when}</span></span>
        <span class="s">${s?"приз ✓":(u?"угадать →":"скоро")}</span></a></li>`}).join("")}</ul>
-     ${isPreview()?`<p class="draft">Режим предпросмотра: все загадки открыты, ответы подписаны. Марине придут обычные ссылки, и каждая загадка откроется только в свой день.<br><br><button class="btn" id="reset" type="button">Сбросить и пройти заново</button> <button class="btn" id="exit" type="button">Выйти из режима админа</button></p>`:""}`;
+     ${isPreview()?`<p class="draft">Режим предпросмотра: все загадки открыты, ответы подписаны. Марине придут обычные ссылки, и каждая загадка откроется только в свой день.<br><br><button class="btn" id="reset" type="button">Сбросить и пройти заново</button> <button class="btn" id="exit" type="button">Выйти из режима админа</button></p>`:(ORDER.some(solved)?`<p class="again"><button class="btn" id="replay" type="button">Пройти всё заново</button></p>`:"")}`;
+  const rp=document.getElementById("replay"); if(rp) rp.onclick=()=>{
+    if(!rp.dataset.sure){ rp.dataset.sure="1"; rp.textContent="Точно? Ответы сотрутся, нажми ещё раз"; return; }
+    try{ localStorage.clear(); }catch(e){} location.hash=""; route(); };
   const r=document.getElementById("reset"); if(r) r.onclick=()=>{ try{ localStorage.clear(); }catch(e){} store.set("prev","1"); route(); };
   const x=document.getElementById("exit"); if(x) x.onclick=()=>{ try{ localStorage.clear(); }catch(e){} PREV=false; location.hash=""; route(); };
 }
