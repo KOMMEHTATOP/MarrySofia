@@ -101,6 +101,9 @@ h1{font-family:var(--f-display);font-weight:400;color:var(--petal);font-size:cla
 .photo2.in{display:block;animation:phIn 1s ease both}
 @keyframes phIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 .photo2 img{display:block;width:100%;height:auto}
+.photo.meme img{animation:none;transform:none}
+.photo.meme::after{display:none}
+.photo.meme .ph{padding:60px 20px;text-align:center;color:var(--mute)}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pair .photo{aspect-ratio:3/4}
 .pair .photo img{height:100%;object-fit:cover;object-position:var(--o)}
@@ -206,6 +209,12 @@ const DAYS = {
     text:[],
     karaoke:[{"t": "Центр, центр, это Агент ноль-ноль-пятнадцать сантиметров.", "s": 0.17, "e": 3.45}, {"t": "Докладываю.", "s": 4.13, "e": 4.81}, {"t": "Объект провёл в Софии четыре дня и покидает территорию Болгарии.", "s": 6.13, "e": 10.21}, {"t": "Повторяю.", "s": 11.47, "e": 12.15}, {"t": "Объект провёл в Софии четыре дня", "s": 12.91, "e": 13.33}, {"t": "и покидает территорию Болгарии.", "s": 13.85, "e": 17.83}, {"t": "Загадки разгаданы, песня прослушана,", "s": 19.43, "e": 22.27}, {"t": "брови по-прежнему лучшие в Европе.", "s": 23.21, "e": 25.77}, {"t": "Объект готов к возвращению.", "s": 27.05, "e": 28.69}, {"t": "При себе имеет: чемодан, лёгкую усталость", "s": 30.35, "e": 31.79}, {"t": "и, по данным разведки,", "s": 32.35, "e": 33.31}, {"t": "тоску по какой-то СексМашине.", "s": 34.41, "e": 37.89}, {"t": "Что это за СексМашина?!", "s": 40.13, "e": 41.17}, {"t": "Радость объекта зафиксирована невооружённым взглядом: руки раскинуты, улыбка на максимуме.", "s": 43.33, "e": 48.57}, {"t": "Продолжаю слежку.", "s": 50.21, "e": 51.23}, {"t": "Агент ноль-ноль-пятнадцать сантиметров выдвигается на позицию.", "s": 51.77, "e": 54.85}, {"t": "Конец связи.", "s": 59.51, "e": 59.82}],
     photo2:"esc", photoAt:"43.3" }
+,
+  den5:{ open:"2026-11-01T00:00:00Z", when:"Астана, 8 ноября", label:"финал",
+    riddle:"Финальная. Прилетает в Астану вместе с первыми морозами: красная грудка, чёрная шапочка, сидит на ветке, как ёлочная игрушка. Прилетает к нам с холодами. Как и ты. Кто это?", bird:"b5", answers:["снегирь","снегирёк","снегирек","червенушка","обикновена червенушка","bullfinch","eurasian bullfinch","pyrrhula pyrrhula"],
+    nick:"Сахарку, он стоит рядом", sign:"Твой Сахарок", extImg:"meme.jpg",
+    title:"Добро пожаловать домой", bg:"Мем дня. Специально к прилёту",
+    text:[] }
 };
 const ORDER = ["den1","den2","den3","den4"];
 const app = document.getElementById("app");
@@ -253,17 +262,17 @@ function renderWelcome(next){
 }
 
 function renderLocked(k){
-  const D=DAYS[k], n=ORDER.indexOf(k)+1;
+  const D=DAYS[k], n=ORDER.indexOf(k)+1, lbl=D.label||(n+" из 4");
   app.className="wrap";
-  app.innerHTML = topBar(`Загадка ${n} из 4`) +
+  app.innerHTML = topBar(`Загадка ${lbl}`) +
     `<div class="lock-art">🪶</div><div class="lockbox"><h1>Ещё рано</h1>
      <p>Эта загадка откроется: ${D.when}.</p><p class="count" id="cnt">${untilText(k)}</p></div>`;
 }
 
 function renderRiddle(k){
-  const D=DAYS[k], n=ORDER.indexOf(k)+1;
+  const D=DAYS[k], n=ORDER.indexOf(k)+1, lbl=D.label||(n+" из 4");
   app.className="wrap reveal";
-  app.innerHTML = topBar(`Загадка ${n} из 4 · ${D.when}`) +
+  app.innerHTML = topBar(`Загадка ${lbl} · ${D.when}`) +
     `<div class="bird">${IMG[D.bird]?`<img src="${IMG[D.bird]}" alt="птица">`:`<div class="ph">сюда фото птицы №${n}</div>`}</div>
      <p class="q">${D.riddle}</p>
      <form class="ans" id="f"><input id="a" type="text" autocomplete="off" autocapitalize="off" placeholder="Напиши название птицы"><button class="btn solid" type="submit">Проверить</button></form>
@@ -279,7 +288,7 @@ function renderRiddle(k){
 }
 
 function renderReward(k){
-  const D=DAYS[k], n=ORDER.indexOf(k)+1;
+  const D=DAYS[k], n=ORDER.indexOf(k)+1, lbl=D.label||(n+" из 4");
   const style=`--o:${D.o};--dx:${D.dx||"-1.5%"};--dy:${D.dy||"-1%"}`;
   const media=[];
   if(D.track && D.track.compact) media.push(`<div class="player compact" id="pl">
@@ -298,7 +307,7 @@ function renderReward(k){
       <div class="bar"><span id="tCur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Перемотка"><span id="tDur">–:––</span></div>
       <audio id="au" preload="metadata" ${IMG[D.track.src]?`src="${IMG[D.track.src]}"`:""}></audio></div>`);
   app.className="wrap reveal";
-  const photos = D.track ? media.shift() : D.circle
+  const photos = D.extImg ? `<div class="photo meme"><img src="${D.extImg}" alt="" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>сюда встанет meme.jpg</div>'"></div>` : D.track ? media.shift() : D.circle
     ? `<div class="circle"><div class="photo" style="${style}">${D.video
          ? `<video src="${IMG[D.video]}" poster="${IMG[D.img]}" autoplay muted loop playsinline></video>`
          : `<img src="${IMG[D.img]}" alt="">`}</div></div>`
@@ -306,7 +315,7 @@ function renderReward(k){
     ? `<div class="pair"><div class="photo" style="${style}"><img src="${IMG[D.img]}" alt="${D.stamp}"><span class="stamp">${D.stamp}</span></div>
        <div class="photo" style="--o:58% 22%;--dx:1%"><img src="${IMG[D.img2]}" alt="${D.stamp2}"><span class="stamp">${D.stamp2}</span></div></div>`
     : `<div class="photo" style="${style}"><img src="${IMG[D.img]}" alt="${D.stamp}"><span class="stamp">${D.stamp}</span></div>`;
-  app.innerHTML = topBar(`Приз ${n} из 4 · ${D.when}`) + photos +
+  app.innerHTML = topBar(`Приз ${lbl} · ${D.when}`) + photos +
     `<h1>${D.title}</h1><p class="bg">${D.bg}</p>
      ${D.karaoke?`<div class="kara" id="kara">${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
      <div class="note">${D.text.map(t=>`<p>${t}</p>`).join("")}${D.sticker?`<img class="st" src="${IMG[D.sticker]}" alt="">`:""}${D.gif?`<video class="st gif" src="${IMG[D.gif]}" autoplay muted loop playsinline></video>`:""}</div>
