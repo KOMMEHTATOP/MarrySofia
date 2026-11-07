@@ -212,9 +212,9 @@ const DAYS = {
 ,
   den5:{ open:"2026-11-01T00:00:00Z", when:"Астана, 8 ноября", label:"финал",
     riddle:"Болгары зовут его «червенушка», за красную грудку. Самец с красной грудкой, а самка серо-коричневая. В Европе он живёт круглый год, а у нас из лесов в города перебирается только зимой.", bird:"b5", answers:["снегирь","снегирёк","снегирек","червенушка","обикновена червенушка","bullfinch","eurasian bullfinch","pyrrhula pyrrhula"],
-    nick:"Сахарку, он стоит рядом", sign:"Твой Сахарок", extImg:"meme.jpg",
-    title:"Добро пожаловать домой", bg:"Мем дня. Специально к прилёту",
-    text:[] }
+    nick:"Сахарку, он стоит рядом", sign:"Твой 0015см", extImg:"meme.jpg",
+    title:"Мем дня", bg:"",
+    text:["Я очень скучал и ждал твоего прилета домой. Стою на вокзале и с нетерпением жду тебя."] }
 };
 const ORDER = ["den1","den2","den3","den4"];
 const app = document.getElementById("app");
@@ -316,7 +316,7 @@ function renderReward(k){
        <div class="photo" style="--o:58% 22%;--dx:1%"><img src="${IMG[D.img2]}" alt="${D.stamp2}"><span class="stamp">${D.stamp2}</span></div></div>`
     : `<div class="photo" style="${style}"><img src="${IMG[D.img]}" alt="${D.stamp}"><span class="stamp">${D.stamp}</span></div>`;
   app.innerHTML = topBar(`Приз ${lbl} · ${D.when}`) + photos +
-    `<h1>${D.title}</h1><p class="bg">${D.bg}</p>
+    `<h1>${D.title}</h1>${D.bg?`<p class="bg">${D.bg}</p>`:""}
      ${D.karaoke?`<div class="kara" id="kara">${D.karaoke.map((l,i)=>`<span class="ln${l.warm?" warm":""}" data-s="${l.s}" data-e="${l.e}">${l.t.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ")}</span>`).join("")}</div>`:""}
      <div class="note">${D.text.map(t=>`<p>${t}</p>`).join("")}${D.sticker?`<img class="st" src="${IMG[D.sticker]}" alt="">`:""}${D.gif?`<video class="st gif" src="${IMG[D.gif]}" autoplay muted loop playsinline></video>`:""}</div>
      ${media.length?`<div class="media">${media.join("")}</div>`:""}
