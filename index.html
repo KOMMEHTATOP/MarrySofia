@@ -212,7 +212,7 @@ const DAYS = {
 ,
   den5:{ open:"2026-11-08T00:30:00Z", when:"воскресенье, 8 ноября · 05:30", label:"финал",
     riddle:"Болгары зовут его «червенушка», за красную грудку. Самец с красной грудкой, а самка серо-коричневая. В Европе он живёт круглый год, а у нас из лесов в города перебирается только зимой.", bird:"b5", answers:["снегирь","снегирёк","снегирек","червенушка","обикновена червенушка","bullfinch","eurasian bullfinch","pyrrhula pyrrhula"],
-    nick:"Сахарку, он стоит рядом", sign:"Твой 0015см", extImg:"meme.jpg", gif:"g5",
+    nick:"Сахарку", hint:"Если не знаешь, спроси у своего воздыхателя который стоит рядом.", sign:"Твой 0015см", extImg:"meme.jpg", gif:"g5",
     title:"Мем дня", bg:"",
     text:["Я очень скучал и ждал твоего прилета домой. Стою в аэропорту и с нетерпением жду тебя."] }
 };
@@ -277,7 +277,7 @@ function renderRiddle(k){
      <p class="q">${D.riddle}</p>
      <form class="ans" id="f"><input id="a" type="text" autocomplete="off" autocapitalize="off" placeholder="Напиши название птицы"><button class="btn solid" type="submit">Проверить</button></form>
      <p class="fb" id="fb"></p>
-     <div class="hint">Если не знаешь, можешь написать своему ${D.nick}.</div>
+     <div class="hint">${D.hint||`Если не знаешь, можешь написать своему ${D.nick}.`}</div>
      ${isPreview()?`<p class="draft">Черновик. Ответ: ${D.answers[0]}</p>`:""}`;
   const wrong=["Не она. Посмотри ещё раз 🙂","Близко? Не знаю. Но нет.","Подумай ещё, у тебя точно получится."]; let w=0;
   document.getElementById("f").onsubmit = e => { e.preventDefault();
